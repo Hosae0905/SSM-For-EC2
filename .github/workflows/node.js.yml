@@ -23,7 +23,7 @@ jobs:
     - name: Install Dependencies
       run: |
         cd ./frontend
-        npm i
+        npm i --force
     - name: Project Test
       run: |
         cd ./frontend
