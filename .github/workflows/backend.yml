@@ -51,7 +51,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Upload to S3
-        run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ secrets.AWS_S3_BUCKET_NAME }}/backend/$GITHUB_SHA.zip
+        run: | 
+          ls -al
+          aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ secrets.AWS_S3_BUCKET_NAME }}/backend/$GITHUB_SHA.zip
       - name: Deploy to EC2
         run: aws deploy create-deployment
           --application-name ${{ secrets.AWS_CD_APPLICATION_NAME }}
