@@ -5,6 +5,8 @@ on:
     branches: [ "frontend" ]
   pull_request:
     branches: [ "frontend" ]
+env:
+  S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
 
 jobs:
   build:
@@ -32,6 +34,17 @@ jobs:
       run: |
         cd ./frontend
         npm run build
+    - name: Configuration AWS
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+    - name: Upload to S3
+      run: | 
+        cd ./frontend
+        aws s3 cp --region ${{ secrets.AWS_REGION }} ./dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/frontend/dist
+        
     - name: Test Report
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
