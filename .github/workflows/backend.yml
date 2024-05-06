@@ -7,6 +7,11 @@ on:
   pull_request:
     branches: [ "backend" ]
 
+env:
+  S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+  CODE_DEPLOY_APPLICATION_NAME: ${{ secrets.AWS_CD_APPLICATION_NAME }}
+  CODE_DEPLOY_GROUP_NAME: ${{ secrets.AWS_CD_GROUP_NAME }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,6 +40,27 @@ jobs:
         run: |
           cd ./backend
           mvn package
+      - name: Make Zip File
+        run: |
+          cd ./backend
+          zip -r ./$GITHUB_SHA.zip ./target/ssm-0.0.1-SNAPSHOT.jar
+      - name: Configuration AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Upload to S3
+        run: | 
+          cd ./backend
+          aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ secrets.AWS_S3_BUCKET_NAME }}/backend/$GITHUB_SHA.zip
+      - name: Deploy to EC2
+        run: aws deploy create-deployment
+          --application-name ${{ secrets.AWS_CD_APPLICATION_NAME }}
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name ${{ secrets.AWS_CD_GROUP_NAME }}
+          --s3-location bucket=${{ secrets.AWS_S3_BUCKET_NAME }},bundleType=zip,key=backend/$GITHUB_SHA.zip
+        
       - name: Test Report
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
