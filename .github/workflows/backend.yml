@@ -45,8 +45,8 @@ jobs:
           mkdir ssm-cicd
           ls -al
           cp ./backend/target/*.jar ./ssm-cicd
-          cp ./backend/appspec.yml ./ssm-cicd
-          cp ./backend/scripts/backend-deploy-start.sh ./ssm-cicd
+          cp ./appspec.yml ./ssm-cicd
+          cp ./scripts/backend-deploy-start.sh ./ssm-cicd
           zip -r ./$GITHUB_SHA.zip ./ssm-cicd
       - name: Configuration AWS
         uses: aws-actions/configure-aws-credentials@v1
