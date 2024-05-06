@@ -9,10 +9,10 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ssm (1)" />
         <module name="ssm" />
-        <module name="ssm (2)" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="ssm (2)" target="11" />
       <module name="ssm-batch" target="11" />
     </bytecodeTargetLevel>
   </component>
