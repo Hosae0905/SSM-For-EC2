@@ -42,8 +42,11 @@ jobs:
           mvn package
       - name: Make Zip File
         run: |
-          cd ./backend
-          zip -r ./$GITHUB_SHA.zip ./target/ssm-0.0.1-SNAPSHOT.jar
+          mkdir ssm-cicd
+          cp ./backend/target/*.jar ./ssm-cicd
+          cp ./backend/appspec.yml ./ssm-cicd
+          cp ./backend/scripts/backend-deploy-start.sh ./ssm-cicd
+          zip -r ./$GITHUB_SHA.zip ./ssm-cicd
       - name: Configuration AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -52,7 +55,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Upload to S3
         run: | 
-          cd ./backend
           aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ secrets.AWS_S3_BUCKET_NAME }}/backend/$GITHUB_SHA.zip
       - name: Deploy to EC2
         run: aws deploy create-deployment
