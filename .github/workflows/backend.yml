@@ -43,6 +43,7 @@ jobs:
       - name: Make Zip File
         run: |
           mkdir ssm-cicd
+          ls -al
           cp ./backend/target/*.jar ./ssm-cicd
           cp ./backend/appspec.yml ./ssm-cicd
           cp ./backend/scripts/backend-deploy-start.sh ./ssm-cicd
