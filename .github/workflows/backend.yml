@@ -1,3 +1,4 @@
+
 name: Backend CI/CD
 
 on:
@@ -54,7 +55,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Upload to S3
-        run: |
+        run: | 
           aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://${{ secrets.AWS_S3_BUCKET_NAME }}/backend/$GITHUB_SHA.zip
       - name: Deploy to EC2
         run: aws deploy create-deployment
@@ -62,7 +63,7 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name ${{ secrets.AWS_CD_GROUP_NAME }}
           --s3-location bucket=${{ secrets.AWS_S3_BUCKET_NAME }},bundleType=zip,key=backend/$GITHUB_SHA.zip
-
+        
       - name: Test Report
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
