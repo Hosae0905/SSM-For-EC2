@@ -11,6 +11,6 @@ permissions:
       group: root
 hooks:
     AfterInstall:
-        - location: scripts/backend-deploy-start.sh
+        - location: backend-deploy-start.sh
           timeout: 300
           runas: root
