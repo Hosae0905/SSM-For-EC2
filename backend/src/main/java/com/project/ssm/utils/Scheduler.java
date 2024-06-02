@@ -14,7 +14,7 @@ public class Scheduler {
 /**
  *  기존 스케줄링 기능을 SCDF 스켈쥴링으로 변경함에 따라 기능 삭제 예정 *
  */
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 1800000)
     public void schedule(){
         notificationService.memberEventRead();
     }

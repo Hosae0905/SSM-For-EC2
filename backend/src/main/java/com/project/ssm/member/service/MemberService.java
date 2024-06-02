@@ -14,6 +14,7 @@ import com.project.ssm.member.repository.ProfileImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,16 +43,18 @@ public class MemberService {
 
     @Transactional
     public BaseResponse<PostMemberSignupRes> signup(PostMemberSignupReq req, MultipartFile profileImage) {
+        ProfileImage saveImage = null;
+
+        if (profileImage != null) {
+            saveImage = profileImageService.registerProfileImage(profileImage);
+        }
+
         memberRepository.findByMemberId(req.getMemberId()).ifPresent(member -> {
             throw MemberDuplicateException.forMemberId(req.getMemberId());
         });
 
-        Member member = memberRepository.save(
-                Member.createMember(req.getMemberId(), passwordEncoder.encode(req.getPassword()),
-                req.getMemberName(), req.getDepartment(), req.getPosition()));
-        if (profileImage != null) {
-            profileImageService.registerProfileImage(member, profileImage);
-        }
+        passwordEncoder.encode(req.getPassword());
+        Member member = memberRepository.save(Member.createMember(req, saveImage));
         return BaseResponse.successRes("MEMBER_001", true, "회원이 등록되었습니다.", PostMemberSignupRes.buildSignUpRes(member));
     }
 
@@ -89,9 +92,9 @@ public class MemberService {
             findMember.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
             memberRepository.save(findMember);
             if (profileImage != null) {
-                List<ProfileImage> profileImagesByMemberIdx = memberRepository.findByMemberIdx(member.getMemberIdx());
-                profileImageRepository.deleteAll(profileImagesByMemberIdx);
-                profileImageService.registerProfileImage(findMember, profileImage);
+                ProfileImage profileImagesByMemberIdx = memberRepository.findByMemberIdx(member.getMemberIdx());
+                profileImageRepository.delete(profileImagesByMemberIdx);
+                profileImageService.registerProfileImage(profileImage);
             }
         }
         return BaseResponse.successRes("MEMBER_004", true, "비밀번호 변경이 완료되었습니다.", "ok");
@@ -123,14 +126,13 @@ public class MemberService {
         return BaseResponse.successRes("MEMBER_007", true, "회원조회가 성공했습니다", members);
     }
 
-    public BaseResponse<List<GetProfileImageRes>> getMemberProfile(GetProfileImageReq getProfileImageReq) {
+    public BaseResponse<GetProfileImageRes> getMemberProfile(GetProfileImageReq getProfileImageReq) {
+//        Member member = memberRepository.findByMemberId(getProfileImageReq.getMemberId()).orElseThrow(() ->
+//                MemberNotFoundException.forMemberId(getProfileImageReq.getMemberId()));
+//        ProfileImage profileImage = memberRepository.findProfileImageByMemberId(getProfileImageReq.getMemberId());
         Member member = memberRepository.findByMemberId(getProfileImageReq.getMemberId()).orElseThrow(() ->
                 MemberNotFoundException.forMemberId(getProfileImageReq.getMemberId()));
-        List<GetProfileImageRes> getProfileImageRes = new ArrayList<>();
-
-        for (ProfileImage profileImage : member.getProfileImage()) {
-            getProfileImageRes.add(GetProfileImageRes.buildProfileImage(profileImage.getImageAddr()));
-        }
+        GetProfileImageRes getProfileImageRes = GetProfileImageRes.buildProfileImage(member.getProfileImage().getImageAddr());
         return BaseResponse.successRes("CHATTING_008", true, "프로필이미지 조회가 성공했습니다.", getProfileImageRes);
     }
 

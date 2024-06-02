@@ -234,8 +234,8 @@ export const useMainStore = defineStore("main", {
         const response = await axios.post(backend + '/member/profile', {
           memberId: this.member.memberId
         })
-        if (response.data.result && response.data.result[0]) {
-          this.member.profileImage = response.data.result[0].imageAddr;
+        if (response.data.code === 'CHATTING_008') {
+          this.member.profileImage = response.data.result.imageAddr;
       } else {
           this.member.profileImage = '';
       }

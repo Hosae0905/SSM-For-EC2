@@ -143,6 +143,7 @@ export default {
   created() {
     this.mainStore.loadMemberData();
     this.mainStore.notificationData();
+    this.mainStore.getProfileImage();
   },
   computed: {
     ...mapStores(useMainStore, useMessageStore, useStompStore)
@@ -244,7 +245,6 @@ export default {
 
     this.mainStore.readMember();
     this.mainStore.readMeetingRooms();
-    this.mainStore.getProfileImage();
   },
   watch: {
     getAllMessage() {

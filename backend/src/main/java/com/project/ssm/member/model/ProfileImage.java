@@ -16,16 +16,18 @@ public class ProfileImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileIdx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_idx")
+//    private Member member;
+
+    @OneToOne(mappedBy = "profileImage")
     private Member member;
 
     @Column(nullable = false, length = 500)
     private String imageAddr;
 
-    public static ProfileImage createProfileImage(Member member, String imageAddr ) {
+    public static ProfileImage createProfileImage(String imageAddr ) {
         return ProfileImage.builder()
-                .member(member)
                 .imageAddr(imageAddr)
                 .build();
     }

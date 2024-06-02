@@ -5,6 +5,7 @@ import com.project.ssm.member.model.Member;
 import com.project.ssm.member.model.request.*;
 import com.project.ssm.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
 
@@ -49,11 +51,6 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.delete(member));
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/profile/add")
-    public ResponseEntity<Object> profileAdd() {
-        return ResponseEntity.ok().body("ok");
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/read")
     public ResponseEntity<Object> memberRead() {
         return ResponseEntity.ok().body(memberService.read());
@@ -61,6 +58,7 @@ public class MemberController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/profile")
     public ResponseEntity<Object> getProfileImage(@RequestBody GetProfileImageReq getProfileImageReq) {
+        log.info("========프로필 이미지 불러오기========");
         return ResponseEntity.ok().body(memberService.getMemberProfile(getProfileImageReq));
     }
 

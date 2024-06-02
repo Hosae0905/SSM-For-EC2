@@ -58,12 +58,12 @@ public class ProfileImageService {
         }
     }
 
-    public List<String> registerProfileImage(Member member, MultipartFile uploadFile) {
-        List<String> profileImageList = new ArrayList<>();
+    public ProfileImage registerProfileImage(MultipartFile uploadFile) {
         String saveFileName = saveFile(uploadFile);
-        profileImageRepository.save(ProfileImage.createProfileImage(member, saveFileName));
-        profileImageList.add(saveFileName.replace(File.separator, "/"));
-
-        return profileImageList;
+        return profileImageRepository.save(ProfileImage.createProfileImage(saveFileName));
+//        List<String> profileImageList = new ArrayList<>();
+//        profileImageList.add(saveFileName.replace(File.separator, "/"));
+//        return profileImageList;
     }
+
 }

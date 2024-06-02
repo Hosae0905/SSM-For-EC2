@@ -31,12 +31,15 @@ public class GetMemberReadRes {
     @Size(max = 45)
     private String position;
 
+    private String profileImage;
+
     public static GetMemberReadRes buildReadRes(Member member) {
         return GetMemberReadRes.builder()
                 .memberId(member.getMemberId())
                 .memberName(member.getMemberName())
                 .department(member.getDepartment())
                 .position(member.getPosition())
+                .profileImage(member.getProfileImage().getImageAddr())
                 .build();
     }
 }

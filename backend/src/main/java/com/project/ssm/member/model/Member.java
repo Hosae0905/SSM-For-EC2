@@ -2,6 +2,7 @@ package com.project.ssm.member.model;
 
 import com.project.ssm.chat.model.entity.Message;
 import com.project.ssm.chat.model.entity.RoomParticipants;
+import com.project.ssm.member.model.request.PostMemberSignupReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -61,11 +62,15 @@ public class Member implements UserDetails {
     @OneToMany(mappedBy = "member")
     private List<Message> messages;
 
+    //    @OneToMany(mappedBy = "member")
+//    private List<ProfileImage> profileImage;
+
     @OneToMany(mappedBy = "member")
     private List<RoomParticipants> roomParticipantsList;
 
-    @OneToMany(mappedBy = "member")
-    private List<ProfileImage> profileImage;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profileIdx", referencedColumnName = "profileIdx")
+    private ProfileImage profileImage;
 
 
     @Override
@@ -103,17 +108,18 @@ public class Member implements UserDetails {
         return true;
     }
 
-    public static Member createMember(String memberId,String memberPw, String memberName, String department, String position) {
+    public static Member createMember(PostMemberSignupReq memberInfo, ProfileImage profileImage) {
         return Member.builder()
-                .memberId(memberId)
-                .memberPw(memberPw)
-                .memberName(memberName)
-                .department(department)
-                .position(position)
+                .memberId(memberInfo.getMemberId())
+                .memberPw(memberInfo.getPassword())
+                .memberName(memberInfo.getMemberName())
+                .department(memberInfo.getDepartment())
+                .position(memberInfo.getPosition())
                 .status(true)
                 .startedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
                 .updatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
                 .authority("ROLE_USER")
+                .profileImage(profileImage)
                 .build();
     }
 }

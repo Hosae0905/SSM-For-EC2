@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.ssm.common.BaseResponse;
 import com.project.ssm.config.security.SecurityConfig;
 import com.project.ssm.member.exception.security.CustomAccessDeniedHandler;
+import com.project.ssm.member.model.request.GetProfileImageReq;
 import com.project.ssm.member.model.request.PostMemberLoginReq;
 import com.project.ssm.member.model.request.PostMemberSignupReq;
+import com.project.ssm.member.model.response.GetProfileImageRes;
 import com.project.ssm.member.model.response.PostMemberLoginRes;
 import com.project.ssm.member.model.response.PostMemberSignupRes;
 import com.project.ssm.member.repository.MemberRepository;
@@ -27,6 +29,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -129,6 +134,29 @@ public class MemberControllerTest {
                 .andExpect(status().isOk());
 
         // Then
+        result.andExpect(MockMvcResultMatchers.jsonPath("$.isSuccess").value(true));
+    }
+
+    @Test
+    @WithMockUser
+    void get_profile_image() throws Exception {
+
+        GetProfileImageRes response = GetProfileImageRes.buildProfileImage("---");
+        BaseResponse<GetProfileImageRes> baseResponse = BaseResponse.successRes("CHATTING_008", true, "프로필이미지 조회가 성공했습니다.", response);
+
+        //Given
+        GetProfileImageReq request = GetProfileImageReq.builder().memberId("member01").build();
+
+        given(memberService.getMemberProfile(any(GetProfileImageReq.class))).willReturn(baseResponse);
+
+        //When
+        ResultActions result = mvc.perform(post("/member/profile")
+                        .content(new ObjectMapper().writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+
+        //Then
         result.andExpect(MockMvcResultMatchers.jsonPath("$.isSuccess").value(true));
     }
 }

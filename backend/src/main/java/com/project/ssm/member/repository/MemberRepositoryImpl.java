@@ -11,14 +11,31 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
+//    @Override
+//    public ProfileImage findProfileImageByMemberId(String memberId) {
+//        QMember member = QMember.member;
+//        QProfileImage profileImage = QProfileImage.profileImage;
+//
+//        return queryFactory
+//                .select(profileImage)
+//                .from(profileImage)
+//                .leftJoin(member)
+//                .on(profileImage.member.memberId.eq(member.memberId))
+//                .where(
+//                        profileImage.member.memberId.eq(memberId)
+//                )
+//                .fetchOne();
+//    }
+
     @Override
-    public List<ProfileImage> findByMemberIdx(Long memberIdx) {
+    public ProfileImage findByMemberIdx(Long memberIdx) {
         QMember member = QMember.member;
         QProfileImage profileImage = QProfileImage.profileImage;
 
@@ -27,10 +44,7 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
                 .from(profileImage)
                 .leftJoin(member)
                 .on(profileImage.member.memberIdx.eq(member.memberIdx))
-                .where(
-                        profileImage.member.memberIdx.eq(memberIdx)
-                )
-                .fetch();
+                .where(profileImage.member.memberIdx.eq(memberIdx)).fetchOne();
     }
 
     @Override
