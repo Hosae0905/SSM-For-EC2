@@ -27,8 +27,8 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
                 .select(profileImage)
                 .from(profileImage)
                 .leftJoin(member)
-                .on(profileImage.member.memberIdx.eq(member.memberIdx))
-                .where(profileImage.member.memberIdx.eq(memberIdx)).fetchOne();
+                .on(profileImage.member.idx.eq(member.idx))
+                .where(profileImage.member.idx.eq(memberIdx)).fetchOne();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
                 .leftJoin(chatRoom)
                 .on(roomParticipants.chatRoom.chatRoomIdx.eq(chatRoom.chatRoomIdx))
                 .leftJoin(member)
-                .on(roomParticipants.member.memberIdx.eq(member.memberIdx))
+                .on(roomParticipants.member.idx.eq(member.idx))
                 .where(
                     roomParticipants.chatRoom.chatRoomId.eq(chatRoomId)
                 )

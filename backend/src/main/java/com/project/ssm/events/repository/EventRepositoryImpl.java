@@ -40,7 +40,7 @@ public class EventRepositoryImpl implements EventCustomRepository {
                 .from(event)
                 .leftJoin(eventParticipants)
                 .on(event.eventIdx.eq(eventParticipants.event.eventIdx))
-                .where(eventParticipants.member.memberIdx.eq(memberIdx))
+                .where(eventParticipants.member.idx.eq(memberIdx))
                 .fetch();
     }
 
