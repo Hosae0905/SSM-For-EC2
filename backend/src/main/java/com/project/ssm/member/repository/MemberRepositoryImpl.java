@@ -18,22 +18,6 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
-//    @Override
-//    public ProfileImage findProfileImageByMemberId(String memberId) {
-//        QMember member = QMember.member;
-//        QProfileImage profileImage = QProfileImage.profileImage;
-//
-//        return queryFactory
-//                .select(profileImage)
-//                .from(profileImage)
-//                .leftJoin(member)
-//                .on(profileImage.member.memberId.eq(member.memberId))
-//                .where(
-//                        profileImage.member.memberId.eq(memberId)
-//                )
-//                .fetchOne();
-//    }
-
     @Override
     public ProfileImage findByMemberIdx(Long memberIdx) {
         QMember member = QMember.member;
@@ -48,7 +32,7 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
     }
 
     @Override
-    public List<RoomParticipants> findChatRoomByMemberId(String memberId) {
+    public List<RoomParticipants> findChatRoomBymemberEmail(String memberEmail) {
         QRoomParticipants roomParticipants = QRoomParticipants.roomParticipants;
         QChatRoom chatRoom = QChatRoom.chatRoom;
 
@@ -58,7 +42,7 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
                 .leftJoin(chatRoom)
                 .on(roomParticipants.chatRoom.chatRoomIdx.eq(chatRoom.chatRoomIdx))
                 .where(
-                        roomParticipants.member.memberId.eq(memberId)
+                        roomParticipants.member.memberEmail.eq(memberEmail)
                 )
                 .fetch();
     }

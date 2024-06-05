@@ -107,7 +107,7 @@ var newEvent = function (start, end, eventType) {
                 "startedAt":eventData.start,
                 "closedAt":eventData.end,
                 "eventContent":eventData.description,
-                "memberId":eventData.username,
+                "memberEmail":eventData.username,
                 "backgroundColor":eventData.backgroundColor,
                 "textColor":eventData.textColor,
                 "allDay":eventData.allDay,

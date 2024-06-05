@@ -78,8 +78,8 @@
                 <select class="inputModal" type="text" name="edit-member" id="edit-member"
                         multiple="multiple" required="required">
                   <option @click="temp" v-for="(member, index) in mainStore.members" :key="index"
-                          :value="member.memberId">
-                    {{ member.memberId }} /
+                          :value="member.memberEmail">
+                    {{ member.memberEmail }} /
                     {{ member.memberName }} /
                     {{ member.department }} /
                     {{ member.position }}

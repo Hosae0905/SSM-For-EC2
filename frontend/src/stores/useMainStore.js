@@ -10,7 +10,7 @@ export const useMainStore = defineStore("main", {
   state: () => ({
     // 토큰 데이터 들어가는 곳
     member: {
-      memberId: "",
+      memberEmail: "",
       name: "",
       department: "",
       position: "",
@@ -48,7 +48,7 @@ export const useMainStore = defineStore("main", {
         const payload = token.split('.')[1]; // JWT의 두 번째 부분이 페이로드입니다.
         const tokenData = this.base64UrlDecode(payload);
 
-        this.member.memberId = tokenData.memberId;
+        this.member.memberEmail = tokenData.memberEmail;
         this.member.name = tokenData.memberName;
         this.member.department = tokenData.department;
         this.member.position = tokenData.position;
@@ -120,7 +120,7 @@ export const useMainStore = defineStore("main", {
     notificationData() {
       this.requestNotificationPermission();
 
-      const evtSource = new EventSource(`${backend}/notification/` + this.member.memberId);
+      const evtSource = new EventSource(`${backend}/notification/` + this.member.memberEmail);
       evtSource.addEventListener("test", function (event) {
         console.log(event.data)
       })
@@ -232,7 +232,7 @@ export const useMainStore = defineStore("main", {
     async getProfileImage() {
       try {
         const response = await axios.post(backend + '/member/profile', {
-          memberId: this.member.memberId
+          memberEmail: this.member.memberEmail
         })
         if (response.data.code === 'CHATTING_008') {
           this.member.profileImage = response.data.result.imageAddr;

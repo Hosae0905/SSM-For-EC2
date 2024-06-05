@@ -56,10 +56,9 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.read());
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/profile")
-    public ResponseEntity<Object> getProfileImage(@RequestBody GetProfileImageReq getProfileImageReq) {
-        log.info("========프로필 이미지 불러오기========");
-        return ResponseEntity.ok().body(memberService.getMemberProfile(getProfileImageReq));
+    @RequestMapping(method = RequestMethod.GET, value = "/profile/{memberIdx}")
+    public ResponseEntity<Object> getProfileImage(@PathVariable Long memberIdx) {
+        return ResponseEntity.ok().body(memberService.getMemberProfile(memberIdx));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chatroommembers")

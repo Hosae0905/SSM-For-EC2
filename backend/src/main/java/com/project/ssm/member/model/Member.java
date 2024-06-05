@@ -3,10 +3,7 @@ package com.project.ssm.member.model;
 import com.project.ssm.chat.model.entity.Message;
 import com.project.ssm.chat.model.entity.RoomParticipants;
 import com.project.ssm.member.model.request.PostMemberSignupReq;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,17 +15,18 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Member implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberIdx;
+    private Long idx;
 
     @Column(nullable = false, length = 45, unique = true)
-    private String memberId;
+    private String memberEmail;
 
     @Column(nullable = false, length = 200)
     private String memberPw;
@@ -56,20 +54,13 @@ public class Member implements UserDetails {
 
     private Boolean status;
 
-//    @OneToMany(mappedBy = "member")
-//    private List<Event> events;
-
     @OneToMany(mappedBy = "member")
     private List<Message> messages;
-
-    //    @OneToMany(mappedBy = "member")
-//    private List<ProfileImage> profileImage;
 
     @OneToMany(mappedBy = "member")
     private List<RoomParticipants> roomParticipantsList;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profileIdx", referencedColumnName = "profileIdx")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private ProfileImage profileImage;
 
 
@@ -85,7 +76,7 @@ public class Member implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberId;
+        return memberEmail;
     }
 
     @Override
@@ -108,9 +99,9 @@ public class Member implements UserDetails {
         return true;
     }
 
-    public static Member createMember(PostMemberSignupReq memberInfo, ProfileImage profileImage) {
+    public static Member createMember(PostMemberSignupReq memberInfo) {
         return Member.builder()
-                .memberId(memberInfo.getMemberId())
+                .memberEmail(memberInfo.getMemberEmail())
                 .memberPw(memberInfo.getPassword())
                 .memberName(memberInfo.getMemberName())
                 .department(memberInfo.getDepartment())
@@ -119,7 +110,6 @@ public class Member implements UserDetails {
                 .startedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
                 .updatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
                 .authority("ROLE_USER")
-                .profileImage(profileImage)
                 .build();
     }
 }

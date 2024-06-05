@@ -1,6 +1,7 @@
 package com.project.ssm.member.model;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -16,19 +17,17 @@ public class ProfileImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileIdx;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_idx")
-//    private Member member;
-
-    @OneToOne(mappedBy = "profileImage")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "memberIdx")
     private Member member;
 
     @Column(nullable = false, length = 500)
     private String imageAddr;
 
-    public static ProfileImage createProfileImage(String imageAddr ) {
+    public static ProfileImage createProfileImage(String imageAddr, Member member) {
         return ProfileImage.builder()
                 .imageAddr(imageAddr)
+                .member(member)
                 .build();
     }
 }

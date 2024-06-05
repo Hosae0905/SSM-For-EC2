@@ -10,9 +10,7 @@ public interface MemberCustomRepository {
 
     ProfileImage findByMemberIdx(Long memberIdx);
 
-//    ProfileImage findProfileImageByMemberId(String memberId);
-
-    List<RoomParticipants> findChatRoomByMemberId(String memberId);
+    List<RoomParticipants> findChatRoomBymemberEmail(String memberEmail);
 
 
     List<RoomParticipants> findMemberNameByChatRoomName(String chatRoomId);

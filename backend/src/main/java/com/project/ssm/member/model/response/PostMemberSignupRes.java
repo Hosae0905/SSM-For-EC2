@@ -20,7 +20,7 @@ public class PostMemberSignupRes {
 
     @NotBlank
     @Size(max = 45)
-    private String memberId;
+    private String memberEmail;
 
     @NotBlank
     @Size(max = 20)
@@ -28,9 +28,9 @@ public class PostMemberSignupRes {
 
     public static PostMemberSignupRes buildSignUpRes(Member member) {
         return PostMemberSignupRes.builder()
-                .memberIdx(member.getMemberIdx())
+                .memberIdx(member.getIdx())
                 .memberName(member.getMemberName())
-                .memberId(member.getMemberId())
+                .memberEmail(member.getMemberEmail())
                 .build();
     }
 }

@@ -68,9 +68,9 @@ public class JwtFilter extends OncePerRequestFilter {
            String authority = JwtUtils.getAuthority(token, secretKey);
 
             if(authority.equals("ROLE_USER")){
-                String memberId = JwtUtils.getUserMemberId(token, secretKey);
-                if (memberId != null) {
-                    Optional<Member> result = memberRepository.findByMemberId(memberId);
+                String memberEmail = JwtUtils.getUsermemberEmail(token, secretKey);
+                if (memberEmail != null) {
+                    Optional<Member> result = memberRepository.findByMemberEmail(memberEmail);
 
                     if (result.isPresent()) {
                         Member member = result.get();

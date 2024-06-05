@@ -43,25 +43,25 @@ public class MemberService {
 
     @Transactional
     public BaseResponse<PostMemberSignupRes> signup(PostMemberSignupReq req, MultipartFile profileImage) {
-        ProfileImage saveImage = null;
-
-        if (profileImage != null) {
-            saveImage = profileImageService.registerProfileImage(profileImage);
-        }
-
-        memberRepository.findByMemberId(req.getMemberId()).ifPresent(member -> {
-            throw MemberDuplicateException.forMemberId(req.getMemberId());
+        memberRepository.findByMemberEmail(req.getMemberEmail()).ifPresent(member -> {
+            throw MemberDuplicateException.formemberEmail(req.getMemberEmail());
         });
 
-        passwordEncoder.encode(req.getPassword());
-        Member member = memberRepository.save(Member.createMember(req, saveImage));
-        return BaseResponse.successRes("MEMBER_001", true, "회원이 등록되었습니다.", PostMemberSignupRes.buildSignUpRes(member));
+        req.setPassword(passwordEncoder.encode(req.getPassword()));
+        Member member = memberRepository.save(Member.createMember(req));
+
+        if (profileImage.isEmpty()) {
+            return BaseResponse.successRes("MEMBER_001", true, "회원이 등록되었습니다.", PostMemberSignupRes.buildSignUpRes(member));
+        } else {
+            profileImageService.registerProfileImage(profileImage, member);
+            return BaseResponse.successRes("MEMBER_001", true, "회원이 등록되었습니다.", PostMemberSignupRes.buildSignUpRes(member));
+        }
     }
 
 
     public BaseResponse<PostMemberLoginRes> login(PostMemberLoginReq req) {
-        Member member = memberRepository.findByMemberId(req.getMemberId()).orElseThrow(() ->
-                MemberNotFoundException.forMemberId(req.getMemberId()));
+        Member member = memberRepository.findByMemberEmail(req.getMemberEmail()).orElseThrow(() ->
+                MemberNotFoundException.forMemberEmail(req.getMemberEmail()));
 
         if (passwordEncoder.matches(req.getPassword(), member.getPassword()) && member.getStatus().equals(true)) {
             return BaseResponse.successRes("MEMBER_002", true, "로그인에 성공하였습니다.", PostMemberLoginRes.buildLoginRes(member, secretKey, expiredTimeMs));
@@ -71,16 +71,16 @@ public class MemberService {
     }
 
     public BaseResponse<String> checkId(GetMemberCheckIdReq req) {
-        memberRepository.findByMemberId(req.getMemberId()).ifPresent(member -> {
-            throw MemberDuplicateException.forMemberId(req.getMemberId());
+        memberRepository.findByMemberEmail(req.getMemberEmail()).ifPresent(member -> {
+            throw MemberDuplicateException.formemberEmail(req.getMemberEmail());
         });
         return BaseResponse.successRes("MEMBER_003", true, "아이디 검사를 완료하였습니다.", "ok");
     }
 
     @Transactional
     public BaseResponse<String> updatePassword(Member member, PatchMemberUpdatePasswordReq req, MultipartFile profileImage) {
-        Member findMember = memberRepository.findById(member.getMemberIdx()).orElseThrow(() ->
-                MemberNotFoundException.forMemberIdx(member.getMemberIdx()));
+        Member findMember = memberRepository.findById(member.getIdx()).orElseThrow(() ->
+                MemberNotFoundException.forMemberIdx(member.getIdx()));
         if (!passwordEncoder.matches(req.getPassword(), findMember.getPassword())) {
             throw MemberAccountException.forInvalidPassword();
         }
@@ -92,16 +92,16 @@ public class MemberService {
             findMember.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
             memberRepository.save(findMember);
             if (profileImage != null) {
-                ProfileImage profileImagesByMemberIdx = memberRepository.findByMemberIdx(member.getMemberIdx());
+                ProfileImage profileImagesByMemberIdx = memberRepository.findByMemberIdx(member.getIdx());
                 profileImageRepository.delete(profileImagesByMemberIdx);
-                profileImageService.registerProfileImage(profileImage);
+                profileImageService.registerProfileImage(profileImage, member);
             }
         }
         return BaseResponse.successRes("MEMBER_004", true, "비밀번호 변경이 완료되었습니다.", "ok");
     }
 
     public BaseResponse<String> delete(Member m) {
-        Optional<Member> byId = memberRepository.findById(m.getMemberIdx());
+        Optional<Member> byId = memberRepository.findById(m.getIdx());
 
         if (byId.isPresent()) {
             Member member = byId.get();
@@ -126,14 +126,15 @@ public class MemberService {
         return BaseResponse.successRes("MEMBER_007", true, "회원조회가 성공했습니다", members);
     }
 
-    public BaseResponse<GetProfileImageRes> getMemberProfile(GetProfileImageReq getProfileImageReq) {
-//        Member member = memberRepository.findByMemberId(getProfileImageReq.getMemberId()).orElseThrow(() ->
-//                MemberNotFoundException.forMemberId(getProfileImageReq.getMemberId()));
-//        ProfileImage profileImage = memberRepository.findProfileImageByMemberId(getProfileImageReq.getMemberId());
-        Member member = memberRepository.findByMemberId(getProfileImageReq.getMemberId()).orElseThrow(() ->
-                MemberNotFoundException.forMemberId(getProfileImageReq.getMemberId()));
-        GetProfileImageRes getProfileImageRes = GetProfileImageRes.buildProfileImage(member.getProfileImage().getImageAddr());
-        return BaseResponse.successRes("CHATTING_008", true, "프로필이미지 조회가 성공했습니다.", getProfileImageRes);
+    @Transactional
+    public BaseResponse<GetProfileImageRes> getMemberProfile(Long memberIdx) {
+        Optional<ProfileImage> profileImage = profileImageRepository.findByMemberIdx(memberIdx);
+        if (profileImage.isPresent()) {
+            GetProfileImageRes getProfileImageRes = GetProfileImageRes.buildProfileImage(profileImage.get().getImageAddr());
+            return BaseResponse.successRes("CHATTING_008", true, "프로필이미지 조회가 성공했습니다.", getProfileImageRes);
+        } else {
+            return null;
+        }
     }
 
     public BaseResponse<List<GetChatRoomMembersRes>> getChatRoomMembers(String chatRoomId){

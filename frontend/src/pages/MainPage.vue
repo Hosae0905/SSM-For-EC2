@@ -126,7 +126,7 @@ export default {
   data() {
     return {
       memberName: "",
-      memberId: "",
+      memberEmail: "",
       message: "",
       recvList: [],
       chatRoomName: "",
@@ -164,7 +164,7 @@ export default {
       }
 
       this.message = $('#summernote').summernote('code')
-      if (e.keyCode === 13 && this.memberId !== '' && this.message !== '') {
+      if (e.keyCode === 13 && this.memberEmail !== '' && this.message !== '') {
         this.message = this.message.replace(/<[^>]*>?/g, '');
         this.send(this.message);
         $('#summernote').summernote('reset');
@@ -173,7 +173,7 @@ export default {
     send(message) {
       const msg = {
         chatRoomId: this.$route.params.roomId,
-        memberId: this.memberId,
+        memberEmail: this.memberEmail,
         memberName: this.memberName,
         message: message
       };
@@ -190,7 +190,7 @@ export default {
       token = token.split(" ")[1];
       const payload = token.split('.')[1];
       const tokenData = this.mainStore.base64UrlDecode(payload)
-      this.memberId = tokenData.memberId;
+      this.memberEmail = tokenData.memberEmail;
       this.memberName = tokenData.memberName;
     },
     aboutmeDetails() {

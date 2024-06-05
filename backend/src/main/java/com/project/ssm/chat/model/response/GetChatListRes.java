@@ -22,15 +22,15 @@ public class GetChatListRes {
     private String memberName;
 
     @NotBlank
-    private String memberId;
+    private String memberEmail;
 
 
-    public static GetChatListRes buildChatList(String message, String createdAt, String memberName, String memberId) {
+    public static GetChatListRes buildChatList(String message, String createdAt, String memberName, String memberEmail) {
         return GetChatListRes.builder()
                 .message(message)
                 .createdAt(createdAt)
                 .memberName(memberName)
-                .memberId(memberId)
+                .memberEmail(memberEmail)
                 .build();
     }
 }

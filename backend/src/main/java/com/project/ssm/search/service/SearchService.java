@@ -24,8 +24,8 @@ public class SearchService {
         } else {
             for (Member member : members) {
                 MemberSearchRes searchRes = MemberSearchRes.builder()
-                        .memberIdx(member.getMemberIdx())
-                        .memberId(member.getMemberId())
+                        .memberIdx(member.getIdx())
+                        .memberEmail(member.getMemberEmail())
                         .memberName(member.getMemberName())
                         .position(member.getPosition())
                         .department(member.getDepartment())

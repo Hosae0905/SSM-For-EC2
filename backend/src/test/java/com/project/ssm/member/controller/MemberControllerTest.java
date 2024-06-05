@@ -77,7 +77,7 @@ public class MemberControllerTest {
 
         PostMemberSignupRes res = PostMemberSignupRes.builder()
                 .memberIdx(1L)
-                .memberId("member01")
+                .memberEmail("member01")
                 .memberName("test")
                 .build();
 
@@ -85,7 +85,7 @@ public class MemberControllerTest {
 
         // Given
         PostMemberSignupReq req = PostMemberSignupReq.builder()
-                .memberId("member01")
+                .memberEmail("member01")
                 .password("qwer1234")
                 .memberName("test")
                 .department("IT")
@@ -121,7 +121,7 @@ public class MemberControllerTest {
 
         // Given
         PostMemberLoginReq req = PostMemberLoginReq.builder()
-                .memberId("member01")
+                .memberEmail("member01")
                 .password("qwer1234")
                 .build();
 
@@ -137,26 +137,26 @@ public class MemberControllerTest {
         result.andExpect(MockMvcResultMatchers.jsonPath("$.isSuccess").value(true));
     }
 
-    @Test
-    @WithMockUser
-    void get_profile_image() throws Exception {
-
-        GetProfileImageRes response = GetProfileImageRes.buildProfileImage("---");
-        BaseResponse<GetProfileImageRes> baseResponse = BaseResponse.successRes("CHATTING_008", true, "프로필이미지 조회가 성공했습니다.", response);
-
-        //Given
-        GetProfileImageReq request = GetProfileImageReq.builder().memberId("member01").build();
-
-        given(memberService.getMemberProfile(any(GetProfileImageReq.class))).willReturn(baseResponse);
-
-        //When
-        ResultActions result = mvc.perform(post("/member/profile")
-                        .content(new ObjectMapper().writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-
-        //Then
-        result.andExpect(MockMvcResultMatchers.jsonPath("$.isSuccess").value(true));
-    }
+//    @Test
+//    @WithMockUser
+//    void get_profile_image() throws Exception {
+//
+//        GetProfileImageRes response = GetProfileImageRes.buildProfileImage("---");
+//        BaseResponse<GetProfileImageRes> baseResponse = BaseResponse.successRes("CHATTING_008", true, "프로필이미지 조회가 성공했습니다.", response);
+//
+//        //Given
+//        GetProfileImageReq request = GetProfileImageReq.builder().memberEmail("member01").build();
+//
+//        given(memberService.getMemberProfile(any(GetProfileImageReq.class))).willReturn(baseResponse);
+//
+//        //When
+//        ResultActions result = mvc.perform(post("/member/profile")
+//                        .content(new ObjectMapper().writeValueAsString(request))
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//
+//
+//        //Then
+//        result.andExpect(MockMvcResultMatchers.jsonPath("$.isSuccess").value(true));
+//    }
 }

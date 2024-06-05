@@ -54,9 +54,9 @@ export default {
       member: {
         name: "",
         department: "",
-        memberId: ""
+        memberEmail: ""
       },
-      memberId: "",
+      memberEmail: "",
       chatRoomName: "",
       memberList: [],
       visible: false,

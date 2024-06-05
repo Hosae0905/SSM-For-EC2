@@ -12,7 +12,7 @@
               <form class="user" enctype="multipart/form-data">
                 <div class="form-group">
                   <div class="input-group">
-                    <input v-model="memberStore.member.memberId" type="text" class="form-control form-control-user"
+                    <input v-model="memberStore.member.memberEmail" type="text" class="form-control form-control-user"
                       placeholder="아이디를 입력해주세요" :disabled="memberStore.checkId" >
                     <div class="input-group-append">
                       <button type="button" class="btn btn-primary btn-user btn-block" @click="checkIdDuplicate">중복

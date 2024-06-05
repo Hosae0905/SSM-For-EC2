@@ -28,7 +28,7 @@ public class EventsOfDate {
         // date = "2024-03-28"
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        Optional<Member> result = memberRepository.findMemberByMemberIdx(memberIdx);
+        Optional<Member> result = memberRepository.findMemberByIdx(memberIdx);
         List<Event> eventsOfMember = eventRepository.findEventsByMemberIdx(memberIdx);
         List<Event> eventList = new ArrayList<>();
         if (result.isEmpty()) {

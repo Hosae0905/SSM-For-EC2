@@ -46,8 +46,8 @@ public class EventService {
     @Transactional
     public BaseResponse<PostEventRes> createEvent(Member member, PostEventReq request) {
 
-        Member verifiedMember = memberRepository.findById(member.getMemberIdx()).orElseThrow(() ->
-                MemberNotFoundException.forMemberIdx(member.getMemberIdx()));
+        Member verifiedMember = memberRepository.findById(member.getIdx()).orElseThrow(() ->
+                MemberNotFoundException.forMemberIdx(member.getIdx()));
         MeetingRoom meetingRoom = null;
 
         if (request.getAllDay()) {
@@ -77,10 +77,10 @@ public class EventService {
     }
 
     private void saveEventParticipants(PostEventReq request, Event event) {
-        for (String memberId : request.getMemberId()) {
-            Member byMemberId = memberRepository.findByMemberId(memberId).orElseThrow(() ->
-                    MemberNotFoundException.forMemberId(memberId));
-            eventParticipantsRepository.save(EventParticipants.buildEventPart(event, byMemberId));
+        for (String memberEmail : request.getMemberEmail()) {
+            Member bymemberEmail = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() ->
+                    MemberNotFoundException.forMemberEmail(memberEmail));
+            eventParticipantsRepository.save(EventParticipants.buildEventPart(event, bymemberEmail));
         }
     }
 
@@ -99,9 +99,9 @@ public class EventService {
 
 
     public BaseResponse<List<GetEventRes>> readEvent(Member member, String date) {
-        Member verifiedMember = memberRepository.findById(member.getMemberIdx()).orElseThrow(() ->
-                MemberNotFoundException.forMemberIdx(member.getMemberIdx()));
-        Long memberIdx = verifiedMember.getMemberIdx();
+        Member verifiedMember = memberRepository.findById(member.getIdx()).orElseThrow(() ->
+                MemberNotFoundException.forMemberIdx(member.getIdx()));
+        Long memberIdx = verifiedMember.getIdx();
         List<Event> events = eventsOfDate.findEventsOfDate(date, memberIdx);
         List<GetEventRes> eventsList = new ArrayList<>();
         if (!events.isEmpty()) {
@@ -115,42 +115,42 @@ public class EventService {
     }
 
     public BaseResponse<PatchEventRes> updateEvent(Member member, PatchEventReq request) {
-        Member verifiedMember = memberRepository.findById(member.getMemberIdx()).orElseThrow(() ->
-                MemberNotFoundException.forMemberIdx(member.getMemberIdx()));
+        Member verifiedMember = memberRepository.findById(member.getIdx()).orElseThrow(() ->
+                MemberNotFoundException.forMemberIdx(member.getIdx()));
         Event event = eventRepository.findById(request.getEventIdx()).orElseThrow(() ->
                 EventNotFoundException.forEventId(request.getEventIdx()));
-        Long memberIdxOfEvent = verifiedMember.getMemberIdx();
-        if (memberIdxOfEvent.equals(member.getMemberIdx())) {
+        Long memberIdxOfEvent = verifiedMember.getIdx();
+        if (memberIdxOfEvent.equals(member.getIdx())) {
             Event updatedEvent = eventRepository.save(Event.setEvent(request, event));
             PatchEventRes patchEventRes = PatchEventRes.buildEventRes(updatedEvent);
             return BaseResponse.successRes("CALENDAR_005", true, "일정이 수정되었습니다.", patchEventRes);
         } else {
-            throw EventAccessException.forMemberId(verifiedMember.getMemberId());
+            throw EventAccessException.formemberEmail(verifiedMember.getMemberEmail());
         }
     }
 
     @Transactional
     public BaseResponse<DeleteEventRes> deleteEvent(Member member, Long eventIdx) {
-        Member verifiedMember = memberRepository.findById(member.getMemberIdx()).orElseThrow(() ->
-                MemberNotFoundException.forMemberIdx(member.getMemberIdx()));
+        Member verifiedMember = memberRepository.findById(member.getIdx()).orElseThrow(() ->
+                MemberNotFoundException.forMemberIdx(member.getIdx()));
         Event event = eventRepository.findById(eventIdx).orElseThrow(() ->
                 EventNotFoundException.forEventId(eventIdx));
-        Long memberIdxOfEvent = verifiedMember.getMemberIdx();
-        if (memberIdxOfEvent.equals(member.getMemberIdx())) {
+        Long memberIdxOfEvent = verifiedMember.getIdx();
+        if (memberIdxOfEvent.equals(member.getIdx())) {
             eventParticipantsRepository.deleteByEvent(event);
             eventRepository.delete(event);
             DeleteEventRes deleteEventRes = DeleteEventRes.buildEventRes(event);
             return BaseResponse.successRes("CALENDAR_006", true, "일정이 삭제되었습니다.", deleteEventRes);
         } else {
-            throw EventAccessException.forMemberId(member.getMemberId());
+            throw EventAccessException.formemberEmail(member.getMemberEmail());
         }
     }
 
     // 회의실 예약 생성
     @Transactional
     public BaseResponse<PatchReservationRes> createReservation(Member member, PatchReservationReq request) {
-        memberRepository.findById(member.getMemberIdx()).orElseThrow(() ->
-                MemberNotFoundException.forMemberIdx(member.getMemberIdx()));
+        memberRepository.findById(member.getIdx()).orElseThrow(() ->
+                MemberNotFoundException.forMemberIdx(member.getIdx()));
 
         MeetingRoom meetingRoom = meetingRoomRepository.findById(request.getMeetingRoomIdx()).orElseThrow(() ->
                 MeetingRoomNotFoundException.forMeetingRoomIdx());
@@ -180,8 +180,8 @@ public class EventService {
     public BaseResponse<List<GetReservationRes>> listReservations(Member member, Long meetingRoomIdx, String date) {
         meetingRoomRepository.findById(meetingRoomIdx).orElseThrow(()->
                 MeetingRoomNotFoundException.forMeetingRoomIdx());
-        memberRepository.findById(member.getMemberIdx()).orElseThrow(() ->
-                MemberNotFoundException.forMemberIdx(member.getMemberIdx()));
+        memberRepository.findById(member.getIdx()).orElseThrow(() ->
+                MemberNotFoundException.forMemberIdx(member.getIdx()));
         List<Event> events = eventRepository.findEventsByReservationTime(meetingRoomIdx, date);
         List<GetReservationRes> eventsList = new ArrayList<>();
         if (!events.isEmpty()) {

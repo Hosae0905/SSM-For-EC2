@@ -36,7 +36,7 @@ public class PostEventRes {
     @Size(max = 100)
     private String eventContent;
 
-    //private List<String> memberId;
+    //private List<String> memberEmail;
 
     @NotBlank
     private Boolean allDay;
@@ -54,8 +54,8 @@ public class PostEventRes {
         if (event.getMeetingRoom() != null) {
             return PostEventRes.builder()
                     .eventIdx(event.getEventIdx())
-//                .memberIdx(member.getMemberIdx())
-//                .memberId(memberIds)
+//                .memberIdx(member.getIdx())
+//                .memberEmail(memberEmails)
                     .title(event.getTitle())
                     .eventContent(event.getEventContent())
                     .startedAt(event.getStartedAt())
@@ -67,8 +67,8 @@ public class PostEventRes {
         } else {
             return PostEventRes.builder()
                     .eventIdx(event.getEventIdx())
-//                .memberIdx(member.getMemberIdx())
-//                .memberId(memberIds)
+//                .memberIdx(member.getIdx())
+//                .memberEmail(memberEmails)
                     .title(event.getTitle())
                     .eventContent(event.getEventContent())
                     .startedAt(event.getStartedAt())
@@ -80,10 +80,10 @@ public class PostEventRes {
         }
 
 //        List<EventParticipants> members = event.getEventParticipantsList();
-//        List<String> memberIds = new ArrayList<>();
+//        List<String> memberEmails = new ArrayList<>();
 //        for (int i = 0; i < members.size(); i++) {
-//            String memberId = event.getEventParticipantsList().get(i).getMember().getMemberId();
-//            memberIds.add(memberId);
+//            String memberEmail = event.getEventParticipantsList().get(i).getMember().getMemberEmail();
+//            memberEmails.add(memberEmail);
 //        }
 
     }

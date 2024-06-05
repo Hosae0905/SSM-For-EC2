@@ -22,8 +22,8 @@ public class NotificationService {
         List<EventParticipants> memberByEventTime = eventRepository.findMemberByEventTime();
         log.info("조회가 되었다 {}", memberByEventTime.isEmpty());
         for (EventParticipants eventParticipants : memberByEventTime) {
-            log.info("아이디 :{}의 일정입니다.",eventParticipants.getMember().getMemberId());
-            emittersService.sendAlarmToClients(eventParticipants.getMember().getMemberId()
+            log.info("아이디 :{}의 일정입니다.",eventParticipants.getMember().getMemberEmail());
+            emittersService.sendAlarmToClients(eventParticipants.getMember().getMemberEmail()
                     , eventParticipants.getEvent().getTitle() + " 일정이 곧 시작예정입니다.");
 
         }
