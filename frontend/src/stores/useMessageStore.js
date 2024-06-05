@@ -18,7 +18,7 @@ export const useMessageStore = defineStore("message", {
             const formatHour = date.getHours() % 12 === 0 ? 12 : date.getHours() % 12;
             message.createdAt = amOrPm + formatHour + ':' + minutes;
             try {
-               const result = await this.getChatProfile(message.memberId);
+               const result = await this.getChatProfile(message.memberEmail);
                message.profileImage = result;
            } catch (error) {
                // 에러 처리 로직을 여기에 추가하세요. 예를 들어, 기본 이미지 설정 등
@@ -44,7 +44,7 @@ export const useMessageStore = defineStore("message", {
                 if (response.data.code === 'CHATTING_008') {
                     const messagesWithProfiles = await Promise.all(response.data.result.map(async (message) => {
                         try {
-                            message.profileImage = await this.getChatProfile(message.memberId);
+                            message.profileImage = await this.getChatProfile(message.memberEmail);
                         } catch (error) {
                             console.error("프로필 이미지를 가져오는 데 실패했습니다", error);
                             message.profileImage = './default-profile.png';
@@ -83,10 +83,10 @@ export const useMessageStore = defineStore("message", {
                  }
              }
         },
-        async getChatProfile(memberId) {
+        async getChatProfile(memberEmail) {
             try {
               const response = await axios.post(backend + '/member/profile', {
-                memberId: memberId
+                memberEmail: memberEmail
               });
               if (response.data.code === 'CHATTING_008') {
                   if (response.data.length !== 0) {

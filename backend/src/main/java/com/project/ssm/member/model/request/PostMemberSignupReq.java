@@ -17,7 +17,7 @@ public class PostMemberSignupReq {
 
     @NotBlank
     @Size(max = 45)
-    private String memberId;
+    private String memberEmail;
 
     @NotBlank
     @Size(max = 200)

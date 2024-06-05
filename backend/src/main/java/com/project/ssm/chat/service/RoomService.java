@@ -52,9 +52,9 @@ public class RoomService {
     public BaseResponse<PostCreateRoomRes> createRoom(PostCreateRoomReq postCreateRoom, Member member) {
         ChatRoom room = chatRoomRepository.save(ChatRoom.createRoom(postCreateRoom.getChatRoomName()));
         roomPartRepository.save(RoomParticipants.buildRoomPart(member, room));
-        for (String memberId : postCreateRoom.getMemberId()) {
-            Member memberInfo = memberRepository.findByMemberId(memberId).orElseThrow(() ->
-                    MemberNotFoundException.forMemberId(memberId));
+        for (String memberEmail : postCreateRoom.getMemberEmail()) {
+            Member memberInfo = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() ->
+                    MemberNotFoundException.forMemberEmail(memberEmail));
             roomPartRepository.save(RoomParticipants.buildRoomPart(memberInfo, room));
         }
         PostCreateRoomRes postCreateRoomRes = PostCreateRoomRes.buildRoomRes(room.getChatRoomName(), room.getChatRoomId());
@@ -63,8 +63,8 @@ public class RoomService {
 
     public BaseResponse<List<GetRoomListRes>> getRoomList(String token) {
         token = JwtUtils.checkJwtToken(token);
-        String memberId = JwtUtils.getUserMemberId(token, secretKey);
-        List<RoomParticipants> roomParticipants = memberRepository.findChatRoomByMemberId(memberId);
+        String memberEmail = JwtUtils.getUsermemberEmail(token, secretKey);
+        List<RoomParticipants> roomParticipants = memberRepository.findChatRoomBymemberEmail(memberEmail);
         List<GetRoomListRes> roomListRes = new ArrayList<>();
 
         if (roomParticipants.isEmpty()) {
@@ -79,14 +79,14 @@ public class RoomService {
     }
 
     public Object updateRoom(PatchUpdateRoomReq patchUpdateRoomReq, Member member) {
-        List<String> memberIdList = new ArrayList<>();
+        List<String> memberEmailList = new ArrayList<>();
         boolean checkMember = true;
 
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(patchUpdateRoomReq.getChatRoomId()).orElseThrow(() ->
                 ChatRoomNotFoundException.forNotFoundChatRoom());
 
         for (RoomParticipants roomParticipants : chatRoom.getRoomParticipantsList()) {
-            if (roomParticipants.getMember().getMemberId().equals(member.getMemberId())) {
+            if (roomParticipants.getMember().getMemberEmail().equals(member.getMemberEmail())) {
                 checkMember = true;
                 break;
             } else {
@@ -97,15 +97,15 @@ public class RoomService {
         if (!checkMember) {
             throw ChatRoomAccessException.forNotAccessChatRoom(member.getMemberName());
         } else {
-            for (String memberId : patchUpdateRoomReq.getMemberId()) {
-                Member addMember = memberRepository.findByMemberId(memberId).orElseThrow(() ->
-                        MemberNotFoundException.forMemberId(memberId));
+            for (String memberEmail : patchUpdateRoomReq.getMemberEmail()) {
+                Member addMember = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() ->
+                        MemberNotFoundException.forMemberEmail(memberEmail));
                 roomPartRepository.save(RoomParticipants.buildRoomPart(addMember, chatRoom));
-                memberIdList.add(memberId);
+                memberEmailList.add(memberEmail);
             }
 
             return BaseResponse.successRes("CHATTING_003", true, "채팅방 수정이 완료되었습니다.",
-                    PatchUpdateRoomRes.buildRoom(patchUpdateRoomReq.getChatRoomId(), chatRoom.getChatRoomName(), memberIdList));
+                    PatchUpdateRoomRes.buildRoom(patchUpdateRoomReq.getChatRoomId(), chatRoom.getChatRoomName(), memberEmailList));
         }
     }
 
@@ -121,10 +121,10 @@ public class RoomService {
 
     public BaseResponse<PatchOutRoomRes> outRoom(String token, String chatRoomId) {
         token = JwtUtils.checkJwtToken(token);
-        String memberId = JwtUtils.getUserMemberId(token, secretKey);
+        String memberEmail = JwtUtils.getUsermemberEmail(token, secretKey);
 
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() ->
-                MemberNotFoundException.forMemberId(memberId));
+        Member member = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() ->
+                MemberNotFoundException.forMemberEmail(memberEmail));
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId).orElseThrow(() ->
                 ChatRoomNotFoundException.forNotFoundChatRoom());
 
@@ -132,7 +132,7 @@ public class RoomService {
             if (roomParticipants.getChatRoom().getChatRoomId().equals(chatRoom.getChatRoomId())) {
                 roomPartRepository.deleteById(roomParticipants.getRoomParticipantsIdx());
                 return BaseResponse.successRes("CHATTING_005", true, "채팅방을 나가셨습니다.",
-                        PatchOutRoomRes.buildOutRoom(chatRoom.getChatRoomId(), member.getMemberId()));
+                        PatchOutRoomRes.buildOutRoom(chatRoom.getChatRoomId(), member.getMemberEmail()));
             }
         }
         throw ChatRoomAccessException.forNotAccessChatRoom(member.getMemberName());
@@ -154,15 +154,15 @@ public class RoomService {
 
     public BaseResponse<DeleteMessageRes> deleteMessage(String token, Long messageIdx) {
         token = JwtUtils.checkJwtToken(token);
-        String memberId = JwtUtils.getUserMemberId(token, secretKey);
+        String memberEmail = JwtUtils.getUsermemberEmail(token, secretKey);
 
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() ->
-                MemberNotFoundException.forMemberId(memberId));
+        Member member = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() ->
+                MemberNotFoundException.forMemberEmail(memberEmail));
 
         Message message = messageRepository.findById(messageIdx).orElseThrow(() ->
                 MessageNotFoundException.forNotFoundMessage(messageIdx));
 
-        if(message.getMember().getMemberId().equals(member.getMemberId())) {
+        if(message.getMember().getMemberEmail().equals(member.getMemberEmail())) {
             messageRepository.deleteById(messageIdx);
             return BaseResponse.successRes("CHATTING_007", true, "메시지 삭제를 성공하였습니다.",
                     DeleteMessageRes.buildMessageRes(messageIdx));
@@ -176,10 +176,10 @@ public class RoomService {
                 ChatRoomNotFoundException.forNotFoundChatRoom());
 
         token = JwtUtils.checkJwtToken(token);
-        String memberId = JwtUtils.getUserMemberId(token, secretKey);
+        String memberEmail = JwtUtils.getUsermemberEmail(token, secretKey);
 
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() ->
-                MemberNotFoundException.forMemberId(memberId));
+        Member member = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() ->
+                MemberNotFoundException.forMemberEmail(memberEmail));
 
         for (RoomParticipants roomParticipants : member.getRoomParticipantsList()) {
             if (roomParticipants.getChatRoom().getChatRoomId().equals(chatRoomId)) {
@@ -191,7 +191,7 @@ public class RoomService {
                             message.getMessage(),
                             message.getCreatedAt(),
                             message.getMember().getMemberName(),
-                            message.getMember().getMemberId()
+                            message.getMember().getMemberEmail()
                     ));
                 }
                 Collections.reverse(chatList);

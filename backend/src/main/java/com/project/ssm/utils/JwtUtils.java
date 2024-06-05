@@ -20,8 +20,8 @@ public class JwtUtils {
     public static String generateAccessToken(Member member, String secretKey, Long expiredTimeMs) {
 
         Claims claims = Jwts.claims();
-        claims.put("memberIdx", member.getMemberIdx());
-        claims.put("memberId", member.getMemberId());
+        claims.put("memberIdx", member.getIdx());
+        claims.put("memberEmail", member.getMemberEmail());
         claims.put("memberName", member.getMemberName());
         claims.put("department", member.getDepartment());
         claims.put("position", member.getPosition());
@@ -45,12 +45,12 @@ public class JwtUtils {
     }
 
     // 사용자 이름 가져오는 메서드
-    public static String getUserMemberId(String token, String key) {
-        return extractAllClaims(token, key).get("memberId", String.class);
+    public static String getUsermemberEmail(String token, String key) {
+        return extractAllClaims(token, key).get("memberEmail", String.class);
     }
 
     public static String getMemberInfo(String token, String key) {
-        return extractAllClaims(token, key).get("memberId", String.class);
+        return extractAllClaims(token, key).get("memberEmail", String.class);
     }
 
     public static String getAuthority(String token, String key) {

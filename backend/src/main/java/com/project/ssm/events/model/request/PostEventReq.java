@@ -28,7 +28,7 @@ public class PostEventReq {
 
     private String type;    // 채팅방
 
-    private List<String> memberId;  // 사용자 이름
+    private List<String> memberEmail;  // 사용자 이름
 
     @NotBlank
     private String backgroundColor;

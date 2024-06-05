@@ -39,20 +39,20 @@ public class MessageService {
 
     public void sendMessage(String chatRoomId, SendMessageReq sendMessageDto) {
         if (!sendMessageDto.getMessage().isEmpty()) {
-            Member member = memberRepository.findByMemberId(sendMessageDto.getMemberId()).orElseThrow(() ->
-                    MemberNotFoundException.forMemberId(sendMessageDto.getMemberId()));
+            Member member = memberRepository.findByMemberEmail(sendMessageDto.getMemberEmail()).orElseThrow(() ->
+                    MemberNotFoundException.forMemberEmail(sendMessageDto.getMemberEmail()));
 
             ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId).orElseThrow(() ->
                     ChatRoomNotFoundException.forNotFoundChatRoom());
             messagingTemplate.convertAndSend("/sub/room/" + sendMessageDto.getChatRoomId(), sendMessageDto);
             messageRepository.save(Message.createMessage(sendMessageDto.getMessage(), member, chatRoom));
 
-            List<RoomParticipants> memberIdsByChatRoomName = memberRepository.findMemberNameByChatRoomName(sendMessageDto.getChatRoomId());
-            if(!memberIdsByChatRoomName.isEmpty()){
-                for (RoomParticipants roomParticipants : memberIdsByChatRoomName) {
-                    String memberId = roomParticipants.getMember().getMemberId();
-                    if(!memberId.equals(sendMessageDto.getMemberId())){
-                        emittersService.sendAlarmToClients(memberId, sendMessageDto.getMemberName() +": "+ sendMessageDto.getMessage());
+            List<RoomParticipants> memberEmailsByChatRoomName = memberRepository.findMemberNameByChatRoomName(sendMessageDto.getChatRoomId());
+            if(!memberEmailsByChatRoomName.isEmpty()){
+                for (RoomParticipants roomParticipants : memberEmailsByChatRoomName) {
+                    String memberEmail = roomParticipants.getMember().getMemberEmail();
+                    if(!memberEmail.equals(sendMessageDto.getMemberEmail())){
+                        emittersService.sendAlarmToClients(memberEmail, sendMessageDto.getMemberName() +": "+ sendMessageDto.getMessage());
                     }
                 }
             }
@@ -63,7 +63,7 @@ public class MessageService {
 
     public void updateMessage(String chatRoomId, UpdateMessageReq updateMessageReq) {
         if (!updateMessageReq.getMessage().isEmpty()) {
-            List<RoomParticipants> chatRoomList = roomParticipantsRepository.findAllByMember_MemberId(updateMessageReq.getMemberId());
+            List<RoomParticipants> chatRoomList = roomParticipantsRepository.findAllByMember_memberEmail(updateMessageReq.getMemberEmail());
             for (RoomParticipants roomParticipants : chatRoomList) {
                 if (roomParticipants.getChatRoom().getChatRoomId().equals(chatRoomId)) {
                     Message message = messageRepository.findById(updateMessageReq.getMessageIdx()).orElseThrow(() ->

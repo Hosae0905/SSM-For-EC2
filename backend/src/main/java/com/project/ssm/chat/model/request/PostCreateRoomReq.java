@@ -17,5 +17,5 @@ public class PostCreateRoomReq {
     private String chatRoomName;
 
 //    @NotBlank
-    private List<String> memberId;
+    private List<String> memberEmail;
 }

@@ -10,10 +10,10 @@
                     <input v-model="chatRoomStore.chatRoomName" type="text" id="chatRoomName" placeholder="채팅방 이름 입력">
                 </div>
                 <div class="form-group">
-                    <label for="memberId">멤버</label>
-                    <input v-model="chatRoomStore.memberId" type="text" id="memberId" placeholder="추가할 멤버 이름">
+                    <label for="memberEmail">멤버</label>
+                    <input v-model="chatRoomStore.memberEmail" type="text" id="memberEmail" placeholder="추가할 멤버 이름">
                 </div>
-                <span v-for="(memberId, index) in chatRoomStore.memberIds" :key="index"> {{ memberId }}</span>
+                <span v-for="(memberEmail, index) in chatRoomStore.memberEmails" :key="index"> {{ memberEmail }}</span>
             </div>
             <div class="modal-footer">
                 <button @click="chatRoomStore.memberPush()">추가</button>

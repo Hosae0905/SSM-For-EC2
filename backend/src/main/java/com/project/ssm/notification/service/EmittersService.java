@@ -13,13 +13,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EmittersService {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    public void sendAlarmToClients(String memberId ,String message) {
-        SseEmitter emitter = emitters.get(memberId);
+    public void sendAlarmToClients(String memberEmail ,String message) {
+        SseEmitter emitter = emitters.get(memberEmail);
         if (emitter != null) {
             try {
                 emitter.send(SseEmitter.event().name("notification").data(message));
             } catch (IOException e) {
-                emitters.remove(memberId);
+                emitters.remove(memberEmail);
             }
         }
     }

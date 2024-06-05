@@ -18,21 +18,21 @@ public class NotificationController {
 
     private final EmittersService emittersService;
 
-    @RequestMapping(value = "/notification/{memberId}", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter handle(@PathVariable String memberId) {
+    @RequestMapping(value = "/notification/{memberEmail}", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter handle(@PathVariable String memberEmail) {
         SseEmitter emitter = new SseEmitter(3600000L);
-        log.info("Emitter for client {}: {}", memberId, emitter);
+        log.info("Emitter for client {}: {}", memberEmail, emitter);
 
-        emittersService.getEmitters().put(memberId, emitter);
+        emittersService.getEmitters().put(memberEmail, emitter);
 
         emitter.onCompletion(() -> {
-            log.info("Emitter completed for client {}", memberId);
-            emittersService.getEmitters().remove(memberId);
+            log.info("Emitter completed for client {}", memberEmail);
+            emittersService.getEmitters().remove(memberEmail);
         });
 
         emitter.onTimeout(() -> {
-            log.info("Emitter timed out for client {}", memberId);
-            emittersService.getEmitters().remove(memberId);
+            log.info("Emitter timed out for client {}", memberEmail);
+            emittersService.getEmitters().remove(memberEmail);
         });
 
         try {

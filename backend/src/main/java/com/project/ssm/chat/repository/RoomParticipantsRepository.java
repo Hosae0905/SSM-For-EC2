@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface RoomParticipantsRepository extends JpaRepository<RoomParticipants, Long> {
 
-    List<RoomParticipants> findAllByMember_MemberId(String memberId);
+    List<RoomParticipants> findAllByMember_memberEmail(String memberEmail);
 }

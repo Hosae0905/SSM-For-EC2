@@ -15,6 +15,5 @@ import javax.validation.constraints.Size;
 public class GetProfileImageReq {
 
     @NotBlank
-    @Size(max = 45)
-    private String memberId;
+    private Long memberIdx;
 }

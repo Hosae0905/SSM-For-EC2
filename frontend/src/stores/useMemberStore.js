@@ -10,7 +10,7 @@ const timeout = 10000;
 export const useMemberStore = defineStore("member", {
     state: () => ({
         member:{
-            memberId:"",
+            memberEmail:"",
             memberPw:"",
             memberPwChecked:"",
             memberOldPw:"", 
@@ -23,8 +23,8 @@ export const useMemberStore = defineStore("member", {
     }),
     actions: {
         async login(member, router) {
-            let loginMember = { memberId: member.memberId, password: member.memberPw }
-            if(member.memberId === '' || member.memberPw === ''){
+            let loginMember = { memberEmail: member.memberEmail, password: member.memberPw }
+            if(member.memberEmail === '' || member.memberPw === ''){
                 toast.error("ID나 비밀번호는 공백일 수 없습니다.", {
                     timeout: timeout,
                 })
@@ -54,7 +54,7 @@ export const useMemberStore = defineStore("member", {
                         timeout: timeout,
                     })
                     localStorage.removeItem("accessToken");
-                    this.member.memberId="";
+                    this.member.memberEmail="";
                     this.member.memberPw="";
                     
                 } else {
@@ -77,7 +77,7 @@ export const useMemberStore = defineStore("member", {
 
             if(this.member.memberPw === this.member.memberPwChecked && this.checkId){
                 let signupMember = {
-                    memberId: this.member.memberId, 
+                    memberEmail: this.member.memberEmail, 
                     password: this.member.memberPw,
                     memberName: this.member.name,
                     department: this.member.department,
@@ -109,7 +109,7 @@ export const useMemberStore = defineStore("member", {
                         });
                     } else if (error.response.data.code === 'MEMBER_007') {
                         localStorage.removeItem("accessToken");
-                        this.member.memberId="";
+                        this.member.memberEmail="";
                         this.member.memberPw="";
                         toast.error(error.response.data.message, {
                             timeout: timeout,
@@ -180,7 +180,7 @@ export const useMemberStore = defineStore("member", {
         // 아이디 중복 확인
         async checkIdDuplicate(router) {
             const req = {
-                memberId: this.member.memberId
+                memberEmail: this.member.memberEmail
             }
             try {
               const response = await axios.post(`${backend}/member/check/id`, req);
