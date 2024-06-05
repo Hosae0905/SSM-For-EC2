@@ -1,0 +1,13 @@
+server:
+  port: 6060
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: ${ROUTE_PROFILE_ID}
+          uri: ${ROUTE_PROFILE_URI}
+          predicates:
+            - ${ROUTE_PROFILE_PATH}
