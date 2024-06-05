@@ -54,7 +54,7 @@ async function mainPageTest() {
         await chatRoomNameField.sendKeys('test');
 
         // 멤버 ID 입력
-        const addMember = driver.findElement(By.id('memberId'));
+        const addMember = driver.findElement(By.id('memberEmail'));
         await addMember.sendKeys('member01');
         await driver.sleep(1500);
 

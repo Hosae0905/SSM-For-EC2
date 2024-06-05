@@ -16,7 +16,7 @@ public class PostMemberLoginReq {
 
     @NotBlank
     @Size(max = 45)
-    private String memberId;
+    private String memberEmail;
 
     @NotBlank
     @Size(max = 45)

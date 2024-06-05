@@ -66,7 +66,7 @@
                 <tbody>
                   <tr v-for="(member, index) in mainStore.searchedMember" :key="index">
                     <td><input type="checkbox" v-model="member.checked" /></td>
-                    <td>{{ member.memberId }}</td>
+                    <td>{{ member.memberEmail }}</td>
                     <td>{{ member.memberName }}</td>
                     <td>{{ member.position }}</td>
                     <td>{{ member.department }}</td>

@@ -17,7 +17,7 @@ public class GetMemberReadRes {
 
     @NotBlank
     @Size(max = 45)
-    private String memberId;
+    private String memberEmail;
 
     @NotBlank
     @Size(max = 20)
@@ -31,12 +31,15 @@ public class GetMemberReadRes {
     @Size(max = 45)
     private String position;
 
+    private String profileImage;
+
     public static GetMemberReadRes buildReadRes(Member member) {
         return GetMemberReadRes.builder()
-                .memberId(member.getMemberId())
+                .memberEmail(member.getMemberEmail())
                 .memberName(member.getMemberName())
                 .department(member.getDepartment())
                 .position(member.getPosition())
+                .profileImage(member.getProfileImage().getImageAddr())
                 .build();
     }
 }

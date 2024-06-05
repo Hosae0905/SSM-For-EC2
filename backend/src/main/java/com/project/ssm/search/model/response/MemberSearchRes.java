@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class MemberSearchRes {
     private Long memberIdx;
-    private String memberId;
+    private String memberEmail;
     private String memberName;
     private String position;
     private String department;

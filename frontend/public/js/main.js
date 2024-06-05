@@ -132,6 +132,7 @@ var calendar = $('#calendar').fullCalendar({
           });
           callback(fixedDate);
         } else if (response.code === 'CALENDAR_003') {
+          console.log(localStorage.getItem('accessToken'));
           console.log(response.message);
         }
       },

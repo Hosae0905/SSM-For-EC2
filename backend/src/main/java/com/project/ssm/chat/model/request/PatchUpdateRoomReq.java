@@ -11,5 +11,5 @@ import java.util.List;
 public class PatchUpdateRoomReq {
     @NotBlank
     private String chatRoomId;
-    private List<String> memberId;
+    private List<String> memberEmail;
 }

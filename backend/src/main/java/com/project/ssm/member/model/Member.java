@@ -2,10 +2,8 @@ package com.project.ssm.member.model;
 
 import com.project.ssm.chat.model.entity.Message;
 import com.project.ssm.chat.model.entity.RoomParticipants;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.project.ssm.member.model.request.PostMemberSignupReq;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,17 +15,18 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Member implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberIdx;
+    private Long idx;
 
     @Column(nullable = false, length = 45, unique = true)
-    private String memberId;
+    private String memberEmail;
 
     @Column(nullable = false, length = 200)
     private String memberPw;
@@ -55,17 +54,14 @@ public class Member implements UserDetails {
 
     private Boolean status;
 
-//    @OneToMany(mappedBy = "member")
-//    private List<Event> events;
-
     @OneToMany(mappedBy = "member")
     private List<Message> messages;
 
     @OneToMany(mappedBy = "member")
     private List<RoomParticipants> roomParticipantsList;
 
-    @OneToMany(mappedBy = "member")
-    private List<ProfileImage> profileImage;
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private ProfileImage profileImage;
 
 
     @Override
@@ -80,7 +76,7 @@ public class Member implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberId;
+        return memberEmail;
     }
 
     @Override
@@ -103,13 +99,13 @@ public class Member implements UserDetails {
         return true;
     }
 
-    public static Member createMember(String memberId,String memberPw, String memberName, String department, String position) {
+    public static Member createMember(PostMemberSignupReq memberInfo) {
         return Member.builder()
-                .memberId(memberId)
-                .memberPw(memberPw)
-                .memberName(memberName)
-                .department(department)
-                .position(position)
+                .memberEmail(memberInfo.getMemberEmail())
+                .memberPw(memberInfo.getPassword())
+                .memberName(memberInfo.getMemberName())
+                .department(memberInfo.getDepartment())
+                .position(memberInfo.getPosition())
                 .status(true)
                 .startedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
                 .updatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))

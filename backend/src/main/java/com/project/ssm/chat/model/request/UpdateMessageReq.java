@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 public class UpdateMessageReq {
     @NotBlank
     @Size(max = 45)
-    private String memberId;
+    private String memberEmail;
     @NotBlank
     @Size(max = 45)
     private String memberName;

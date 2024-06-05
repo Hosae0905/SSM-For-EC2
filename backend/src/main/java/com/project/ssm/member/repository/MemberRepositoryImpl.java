@@ -11,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberCustomRepository {
@@ -18,7 +19,7 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ProfileImage> findByMemberIdx(Long memberIdx) {
+    public ProfileImage findByMemberIdx(Long memberIdx) {
         QMember member = QMember.member;
         QProfileImage profileImage = QProfileImage.profileImage;
 
@@ -26,15 +27,12 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
                 .select(profileImage)
                 .from(profileImage)
                 .leftJoin(member)
-                .on(profileImage.member.memberIdx.eq(member.memberIdx))
-                .where(
-                        profileImage.member.memberIdx.eq(memberIdx)
-                )
-                .fetch();
+                .on(profileImage.member.idx.eq(member.idx))
+                .where(profileImage.member.idx.eq(memberIdx)).fetchOne();
     }
 
     @Override
-    public List<RoomParticipants> findChatRoomByMemberId(String memberId) {
+    public List<RoomParticipants> findChatRoomBymemberEmail(String memberEmail) {
         QRoomParticipants roomParticipants = QRoomParticipants.roomParticipants;
         QChatRoom chatRoom = QChatRoom.chatRoom;
 
@@ -44,7 +42,7 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
                 .leftJoin(chatRoom)
                 .on(roomParticipants.chatRoom.chatRoomIdx.eq(chatRoom.chatRoomIdx))
                 .where(
-                        roomParticipants.member.memberId.eq(memberId)
+                        roomParticipants.member.memberEmail.eq(memberEmail)
                 )
                 .fetch();
     }
@@ -62,7 +60,7 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
                 .leftJoin(chatRoom)
                 .on(roomParticipants.chatRoom.chatRoomIdx.eq(chatRoom.chatRoomIdx))
                 .leftJoin(member)
-                .on(roomParticipants.member.memberIdx.eq(member.memberIdx))
+                .on(roomParticipants.member.idx.eq(member.idx))
                 .where(
                     roomParticipants.chatRoom.chatRoomId.eq(chatRoomId)
                 )

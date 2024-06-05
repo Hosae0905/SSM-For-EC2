@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class SendMessageReq {
     @NotBlank
-    private String memberId;
+    private String memberEmail;
     @NotBlank
     private String memberName;
     @NotBlank

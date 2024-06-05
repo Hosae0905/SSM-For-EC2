@@ -7,12 +7,12 @@ import lombok.Data;
 @Builder
 public class PatchOutRoomRes {
     private String chatRoomId;
-    private String memberId;
+    private String memberEmail;
 
-    public static PatchOutRoomRes buildOutRoom(String chatRoomId, String memberId) {
+    public static PatchOutRoomRes buildOutRoom(String chatRoomId, String memberEmail) {
         return PatchOutRoomRes.builder()
                 .chatRoomId(chatRoomId)
-                .memberId(memberId)
+                .memberEmail(memberEmail)
                 .build();
     }
 }
