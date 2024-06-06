@@ -11,3 +11,10 @@ spring:
           uri: ${ROUTE_PROFILE_URI}
           predicates:
             - ${ROUTE_PROFILE_PATH}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URL}
