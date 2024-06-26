@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eureka-service" />
+        <module name="member-service" />
         <module name="profile-service" />
         <module name="ssm (1)" />
         <module name="gateway-service" />
@@ -22,6 +23,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="eureka-service" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
+      <module name="member-service" options="-parameters" />
       <module name="profile-service" options="-parameters" />
       <module name="ssm" options="-parameters" />
       <module name="ssm (1)" options="-parameters" />

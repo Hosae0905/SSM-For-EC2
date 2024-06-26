@@ -1,9 +1,9 @@
 server:
-  port: 7010
+  port: 7020
 
 spring:
   application:
-    name: profile-service
+    name: member-service
   datasource:
     driver-class-name: ${DB_DRIVER}
     url: ${DB_URL}
@@ -12,25 +12,12 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
     show-sql: true
     database-platform: ${DB_PLATFORM}
-
-cloud:
-  aws:
-    s3:
-      profile-bucket: ${BUCKET}
-    credentials:
-      access-key: ${AWS_S3_ACCESS_KEY}
-      secret-key: ${AWS_S3_SECRET_KEY}
-    region:
-      static: ${REGION}
-      auto: false
-    stack:
-      auto: false
 
 eureka:
   client:
