@@ -14,25 +14,29 @@ public class MemberService implements MemberInPort {
 
     @Override
     public Member signup(PostSignUpCommand command) {
-        memberOutPort.signUp(command);
-        return null;
+        return memberOutPort.signUp(command);
     }
 
     @Override
-    public Member login(PostLoginCommand command) {
-        memberOutPort.login(command);
-        return null;
+    public String login(PostLoginCommand command) {
+        if (memberOutPort.login(command)) {
+            return "ok";
+        } else {
+            return "login was failed";
+        }
     }
 
     @Override
     public Member update(PatchUpdateCommand command) {
-        memberOutPort.updateMember(command);
-        return null;
+        return memberOutPort.updateMember(command);
     }
 
     @Override
-    public Member delete(DeleteMemberCommand command) {
-        memberOutPort.deleteMember(command);
-        return null;
+    public String delete(DeleteMemberCommand command) {
+        if(memberOutPort.deleteMember(command)) {
+            return "ok";
+        } else {
+            return null;
+        }
     }
 }

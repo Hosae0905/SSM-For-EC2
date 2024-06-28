@@ -4,7 +4,7 @@ import com.member.memberservice.domain.Member;
 
 public interface MemberInPort {
     Member signup(PostSignUpCommand command);
-    Member login(PostLoginCommand command);
+    String login(PostLoginCommand command);
     Member update(PatchUpdateCommand command);
-    Member delete(DeleteMemberCommand command);
+    String delete(DeleteMemberCommand command);
 }

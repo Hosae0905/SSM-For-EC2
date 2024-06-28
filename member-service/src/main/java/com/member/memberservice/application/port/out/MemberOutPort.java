@@ -8,7 +8,7 @@ import com.member.memberservice.domain.Member;
 
 public interface MemberOutPort {
     Member signUp(PostSignUpCommand command);
-    Member login(PostLoginCommand command);
+    Boolean login(PostLoginCommand command);
     Member updateMember(PatchUpdateCommand command);
-    Member deleteMember(DeleteMemberCommand command);
+    Boolean deleteMember(DeleteMemberCommand command);
 }

@@ -9,6 +9,8 @@ import com.member.memberservice.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class MemberPersistenceAdapter implements MemberOutPort {
@@ -17,21 +19,38 @@ public class MemberPersistenceAdapter implements MemberOutPort {
 
     @Override
     public Member signUp(PostSignUpCommand command) {
-        return null;
+        MemberEntity member = memberRepository.save(MemberEntity.buildMemberEntity());
+        return Member.buildMember(member);
     }
 
     @Override
-    public Member login(PostLoginCommand command) {
-        return null;
+    public Boolean login(PostLoginCommand command) {
+        Optional<MemberEntity> member = memberRepository.findByMemberEmail(command.getMemberEmail());
+
+        if (member.isPresent()) {
+            if (member.get().getMemberPw().equals(command.getPassword())) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
     public Member updateMember(PatchUpdateCommand command) {
+        Optional<MemberEntity> member = memberRepository.findByMemberEmail(command.getMemberEmail());
+        if (member.isPresent()) {
+            if (member.get().getMemberPw().equals(command.getPassword())) {
+                member.get().setMemberPw(command.getNewPassword());
+            }
+        }
         return null;
     }
 
     @Override
-    public Member deleteMember(DeleteMemberCommand command) {
-        return null;
+    public Boolean deleteMember(DeleteMemberCommand command) {
+        return memberRepository.deleteByMemberEmail(command.getMemberEmail());
     }
 }

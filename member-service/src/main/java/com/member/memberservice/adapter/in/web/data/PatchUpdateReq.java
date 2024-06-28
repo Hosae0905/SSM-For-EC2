@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatchUpdateReq {
+    private String memberEmail;
     private String password;
     private String newPassword;
 }

@@ -17,26 +17,26 @@ public class MemberController {
     private final MemberInPort memberInPort;
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ResponseEntity<Object> signup(@RequestPart PostSignUpReq postSignUpReq, @RequestPart(required = false) MultipartFile multipartFile) {
-        PostSignUpCommand command = PostSignUpCommand.buildCommand();
+    public ResponseEntity<Object> signup(@RequestPart PostSignUpReq postSignUpReq, @RequestPart(required = false) MultipartFile profileImage) {
+        PostSignUpCommand command = PostSignUpCommand.buildCommand(postSignUpReq, profileImage);
         return ResponseEntity.ok().body(memberInPort.signup(command));
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<Object> login(@RequestBody PostLoginReq postLoginReq) {
-        PostLoginCommand command = PostLoginCommand.buildCommand();
+        PostLoginCommand command = PostLoginCommand.buildCommand(postLoginReq);
         return ResponseEntity.ok().body(memberInPort.login(command));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PATCH)
     public ResponseEntity<Object> updateMember(@RequestBody PatchUpdateReq patchUpdateReq) {
-        PatchUpdateCommand command = PatchUpdateCommand.buildCommand();
+        PatchUpdateCommand command = PatchUpdateCommand.buildCommand(patchUpdateReq);
         return ResponseEntity.ok().body(memberInPort.update(command));
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteMember(@RequestBody DeleteMemberReq deleteMemberReq) {
-        DeleteMemberCommand command = DeleteMemberCommand.buildCommand();
+        DeleteMemberCommand command = DeleteMemberCommand.buildCommand(deleteMemberReq);
         return ResponseEntity.ok().body(memberInPort.delete(command));
     }
 }
