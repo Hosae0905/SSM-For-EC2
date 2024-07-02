@@ -1,0 +1,19 @@
+package com.member.memberservice.application.port.in;
+
+import com.member.memberservice.adapter.in.web.data.PostLoginReq;
+import lombok.Builder;
+import lombok.Getter;
+
+@Builder
+@Getter
+public class LoginMemberCommand {
+    private String memberEmail;
+    private String password;
+
+    public static LoginMemberCommand buildCommand(PostLoginReq postLoginReq) {
+        return LoginMemberCommand.builder()
+                .memberEmail(postLoginReq.getMemberEmail())
+                .password(postLoginReq.getPassword())
+                .build();
+    }
+}
