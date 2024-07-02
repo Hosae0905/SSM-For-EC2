@@ -14,29 +14,32 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
-    private final MemberInPort memberInPort;
+    private final SignUpMemberInPort signUpMemberInPort;
+    private final LoginMemberInPort loginMemberInPort;
+    private final UpdateMemberInPort updateMemberInPort;
+    private final DeleteMemberInPort deleteMemberInPort;
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<Object> signup(@RequestPart PostSignUpReq postSignUpReq, @RequestPart(required = false) MultipartFile profileImage) {
-        PostSignUpCommand command = PostSignUpCommand.buildCommand(postSignUpReq, profileImage);
-        return ResponseEntity.ok().body(memberInPort.signup(command));
+        SignUpMemberCommand command = SignUpMemberCommand.buildCommand(postSignUpReq, profileImage);
+        return ResponseEntity.ok().body(signUpMemberInPort.signup(command));
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<Object> login(@RequestBody PostLoginReq postLoginReq) {
-        PostLoginCommand command = PostLoginCommand.buildCommand(postLoginReq);
-        return ResponseEntity.ok().body(memberInPort.login(command));
+        LoginMemberCommand command = LoginMemberCommand.buildCommand(postLoginReq);
+        return ResponseEntity.ok().body(loginMemberInPort.login(command));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PATCH)
-    public ResponseEntity<Object> updateMember(@RequestBody PatchUpdateReq patchUpdateReq) {
-        PatchUpdateCommand command = PatchUpdateCommand.buildCommand(patchUpdateReq);
-        return ResponseEntity.ok().body(memberInPort.update(command));
+    public ResponseEntity<Object> updateMember(@RequestHeader(value = "Authorization") String token, @RequestBody PatchUpdateReq patchUpdateReq) {
+        UpdateMemberCommand command = UpdateMemberCommand.buildCommand(patchUpdateReq);
+        return ResponseEntity.ok().body(updateMemberInPort.update(command, token));
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteMember(@RequestBody DeleteMemberReq deleteMemberReq) {
+    public ResponseEntity<Object> deleteMember(@RequestHeader(value = "Authorization") String token, @RequestBody DeleteMemberReq deleteMemberReq) {
         DeleteMemberCommand command = DeleteMemberCommand.buildCommand(deleteMemberReq);
-        return ResponseEntity.ok().body(memberInPort.delete(command));
+        return ResponseEntity.ok().body(deleteMemberInPort.delete(command, token));
     }
 }

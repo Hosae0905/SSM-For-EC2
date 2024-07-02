@@ -6,13 +6,13 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class PatchUpdateCommand {
+public class UpdateMemberCommand {
     private String memberEmail;
     private String password;
     private String newPassword;
 
-    public static PatchUpdateCommand buildCommand(PatchUpdateReq patchUpdateReq) {
-        return PatchUpdateCommand.builder()
+    public static UpdateMemberCommand buildCommand(PatchUpdateReq patchUpdateReq) {
+        return UpdateMemberCommand.builder()
                 .memberEmail(patchUpdateReq.getMemberEmail())
                 .password(patchUpdateReq.getPassword())
                 .newPassword(patchUpdateReq.getNewPassword())

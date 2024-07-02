@@ -1,8 +1,11 @@
 package com.member.memberservice.adapter.out.persistence;
 
+import com.member.memberservice.application.port.in.SignUpMemberCommand;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity(name = "member")
 @Builder
@@ -42,7 +45,17 @@ public class MemberEntity {
 
     private Boolean status;
 
-    public static MemberEntity buildMemberEntity() {
-        return MemberEntity.builder().build();
+    public static MemberEntity buildMemberEntity(SignUpMemberCommand command) {
+        return MemberEntity.builder()
+                .memberEmail(command.getMemberEmail())
+                .memberPw(command.getPassword())
+                .memberName(command.getMemberName())
+                .department(command.getDepartment())
+                .position(command.getPosition())
+                .startedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
+                .updatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")))
+                .authority("ROLE_USER")
+                .status(true)
+                .build();
     }
 }

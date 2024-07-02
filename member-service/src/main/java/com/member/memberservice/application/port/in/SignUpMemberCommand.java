@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Getter
-public class PostSignUpCommand {
+public class SignUpMemberCommand {
     private String memberEmail;
     private String password;
     private String memberName;
@@ -15,8 +15,8 @@ public class PostSignUpCommand {
     private String position;
     private MultipartFile profileImage;
 
-    public static PostSignUpCommand buildCommand(PostSignUpReq postSignUpReq, MultipartFile profileImage) {
-        return PostSignUpCommand.builder()
+    public static SignUpMemberCommand buildCommand(PostSignUpReq postSignUpReq, MultipartFile profileImage) {
+        return SignUpMemberCommand.builder()
                 .memberEmail(postSignUpReq.getMemberEmail())
                 .password(postSignUpReq.getPassword())
                 .memberName(postSignUpReq.getMemberName())

@@ -1,6 +1,11 @@
 server:
   port: 7020
 
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  token:
+    expired-time-ms: ${JWT_EXP_TIME_MS}
+
 spring:
   application:
     name: member-service
@@ -12,7 +17,7 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true

@@ -6,12 +6,12 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class PostLoginCommand {
+public class LoginMemberCommand {
     private String memberEmail;
     private String password;
 
-    public static PostLoginCommand buildCommand(PostLoginReq postLoginReq) {
-        return PostLoginCommand.builder()
+    public static LoginMemberCommand buildCommand(PostLoginReq postLoginReq) {
+        return LoginMemberCommand.builder()
                 .memberEmail(postLoginReq.getMemberEmail())
                 .password(postLoginReq.getPassword())
                 .build();
